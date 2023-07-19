@@ -19,7 +19,7 @@ class QuizController extends Controller
     public function index(): Response
     {
         return Inertia::render('Quizzes/Index', [
-
+            'quizzes' => Quiz::query()->latest()->get(),
         ]);
     }
 
