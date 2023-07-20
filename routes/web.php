@@ -37,7 +37,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::resource('quizzes', QuizController::class)
-    ->only((['index', 'store']))
+    ->only((['index', 'store', 'edit', 'create', 'update']))
     ->middleware(['auth', 'verified']);
 
 require __DIR__ . '/auth.php';

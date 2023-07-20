@@ -28,9 +28,9 @@ class QuizController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(): Response
     {
-        //
+        return Inertia::render('Quizzes/Form', []);
     }
 
     /**
@@ -43,8 +43,8 @@ class QuizController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:500',
-            'number_of_questions' => 'required|int|min:1|max:20',
-            'duration_min' => 'required|int|min:1|max:30',
+            'number_of_questions' => 'required|int|min:0|max:20',
+            'duration_min' => 'required|int|min:0|max:30',
         ]);
 
         $quiz = new Quiz($validated);
@@ -70,9 +70,11 @@ class QuizController extends Controller
      * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function edit(Quiz $quiz)
+    public function edit(Quiz $quiz): Response
     {
-        //
+        return Inertia::render('Quizzes/Form', [
+            'quiz' => $quiz,
+        ]);
     }
 
     /**
@@ -82,9 +84,17 @@ class QuizController extends Controller
      * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Quiz $quiz)
+    public function update(Request $request, Quiz $quiz): RedirectResponse
     {
-        //
+        $validated = $request->validate([
+            'name' => 'required|string|max:500',
+            'number_of_questions' => 'required|int|min:0|max:20',
+            'duration_min' => 'required|int|min:0|max:30',
+        ]);
+
+        $quiz->update($validated);
+        $quiz->save();
+        return redirect(route('quizzes.edit', $quiz));
     }
 
     /**
