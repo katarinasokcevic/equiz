@@ -2,25 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Question;
 use App\Models\Quiz;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
+
 use Inertia\Response;
 use Inertia\Inertia;
 
-
-class QuizController extends Controller
+class QuestionController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index(): Response
+    public function index()
     {
-        return Inertia::render('Quizzes/Index', [
-            'quizzes' => Quiz::query()->latest()->get(),
-        ]);
+        //
     }
 
     /**
@@ -28,9 +27,13 @@ class QuizController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create(): Response
+    public function create(Request $request): Response
     {
-        return Inertia::render('Quizzes/Form', []);
+        $quizId = $request->get('quiz_id');
+        $quiz = Quiz::find($quizId);
+        return Inertia::render('Questions/Form', [
+            'quiz' => $quiz,
+        ]);
     }
 
     /**
@@ -42,24 +45,23 @@ class QuizController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:500',
-            'number_of_questions' => 'required|int|min:0|max:20',
-            'duration_min' => 'required|int|min:0|max:30',
+            'question' => 'required|string|max:250',
+            'quiz_id' => 'required|int'
         ]);
 
-        $quiz = new Quiz($validated);
-        $quiz->save();
+        $quiz = Quiz::find($validated['quiz_id']);
+        $question = $quiz->questions()->create($validated);
 
-        return redirect(route('quizzes.index'));
+        return redirect(route('questions.edit', $question));
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Models\Quiz  $quiz
+     * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function show(Quiz $quiz)
+    public function show(Question $question)
     {
         //
     }
@@ -67,14 +69,16 @@ class QuizController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Models\Quiz  $quiz
+     * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function edit(Quiz $quiz): Response
+    public function edit(Question $question): Response
     {
-        return Inertia::render('Quizzes/Form', [
+        $quiz = $question->quiz();
+        return Inertia::render('Questions/Form', [
             'quiz' => $quiz,
-            'questions' => $quiz->questions()->oldest()->get(),
+            'question' => $question,
+            'answers' => [], // TODO
         ]);
     }
 
@@ -82,29 +86,27 @@ class QuizController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Quiz  $quiz
+     * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Quiz $quiz): RedirectResponse
+    public function update(Request $request, Question $question): RedirectResponse
     {
         $validated = $request->validate([
-            'name' => 'required|string|max:500',
-            'number_of_questions' => 'required|int|min:0|max:20',
-            'duration_min' => 'required|int|min:0|max:30',
+            'question' => 'required|string|max:250',
         ]);
 
-        $quiz->update($validated);
-        $quiz->save();
-        return redirect(route('quizzes.edit', $quiz));
+        $question->update($validated);
+        $question->save();
+        return redirect(route('questions.edit', $question));
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Models\Quiz  $quiz
+     * @param  \App\Models\Question  $question
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Quiz $quiz)
+    public function destroy(Question $question)
     {
         //
     }

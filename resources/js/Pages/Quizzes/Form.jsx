@@ -2,9 +2,9 @@ import React from 'react';
 import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
 import InputError from '@/Components/InputError';
 import PrimaryButton from '@/Components/PrimaryButton';
-import { useForm, Head } from '@inertiajs/react';
+import { Link, useForm, Head } from '@inertiajs/react';
  
-export default function Index({ auth, quiz }) {
+export default function Index({ auth, quiz, questions }) {
     const { data, setData, post, patch, processing, reset, errors } = useForm(quiz);
  
     const submit = (e) => {
@@ -19,8 +19,25 @@ export default function Index({ auth, quiz }) {
     };
 
     let buttonText = "Create Quiz"
+    let questionSection;
     if (quiz && quiz.id) {
         buttonText = "Edit Quiz";
+        let questionList = questions.map(question => 
+            <div className="mt-6 bg-white shadow-sm rounded-lg divide-y">
+                <div className='flex justify-between'>
+                    <div class="ml-2">{question.question}</div>
+                    <Link href={route("questions.edit", question.id)}>
+                        <PrimaryButton>Edit</PrimaryButton>
+                    </Link>
+                </div>
+            </div>
+        );
+        questionSection = <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
+            <Link href={route('questions.create', {quiz_id: quiz.id})}>
+                <PrimaryButton>Add Question</PrimaryButton>
+            </Link>
+            <div>{questionList}</div>
+            </div>;
     }
  
     return (
@@ -54,6 +71,7 @@ export default function Index({ auth, quiz }) {
                     </PrimaryButton>
                 </form>
             </div>
+            {questionSection}
         </AuthenticatedLayout>
     );
 }

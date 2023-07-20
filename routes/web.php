@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuizController;
+use App\Http\Controllers\QuestionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -39,5 +40,12 @@ Route::middleware('auth')->group(function () {
 Route::resource('quizzes', QuizController::class)
     ->only((['index', 'store', 'edit', 'create', 'update']))
     ->middleware(['auth', 'verified']);
+
+
+Route::resource('questions', QuestionController::class)
+    ->only((['store', 'edit', 'create', 'update']))
+    ->middleware(['auth', 'verified']);
+
+
 
 require __DIR__ . '/auth.php';
