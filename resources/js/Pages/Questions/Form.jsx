@@ -19,26 +19,15 @@ export default function Index({ auth, quiz, question, answers }) {
     };
 
     let buttonText = "Create Question"
-    let answerSection;
     if (question && question.id) {
         buttonText = "Edit Question";
-        let answerList = answers.map(question => 
-            <p>{question.question}</p>
-        );
-        // TODO: use correct route for 
-        answerSection = <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
-            <Link href={route('questions.create')}>
-                <PrimaryButton>Add Answer</PrimaryButton>
-            </Link>
-            <div>{answerList}</div>
-            </div>;
     }
  
     return (
         <AuthenticatedLayout auth={auth}>
             <Head title="Question" />
             <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
-                <h1>Add question for Quiz: <strong>{quiz.name}</strong></h1>
+                <h1>Question for Quiz: <strong>{quiz.name}</strong></h1>
                 <form onSubmit={submit}>
                     <input
                         type="text"
@@ -52,7 +41,6 @@ export default function Index({ auth, quiz, question, answers }) {
                     </PrimaryButton>
                 </form>
             </div>
-            {answerSection}
         </AuthenticatedLayout>
     );
 }

@@ -12,6 +12,10 @@ class Question extends Model
 
     protected $fillable = [
         'question',
+        'correct_answer',
+        'wrong_answer1',
+        'wrong_answer2',
+        'wrong_answer3',
     ];
 
     public function quiz(): BelongsTo

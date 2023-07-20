@@ -18,6 +18,10 @@ return new class extends Migration {
             $table->string('question');
             $table->foreignId('quiz_id');
             $table->foreign('quiz_id')->references('id')->on('quizzes');
+            $table->string('correct_answer');
+            $table->string('wrong_answer1');
+            $table->string('wrong_answer2');
+            $table->string('wrong_answer3');
         });
     }
 
