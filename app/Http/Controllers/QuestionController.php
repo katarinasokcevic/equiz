@@ -46,13 +46,17 @@ class QuestionController extends Controller
     {
         $validated = $request->validate([
             'question' => 'required|string|max:250',
-            'quiz_id' => 'required|int'
+            'quiz_id' => 'required|int',
+            'correct_answer' => 'required|string|max:250',
+            'wrong_answer1' => 'required|string|max:250',
+            'wrong_answer2' => 'required|string|max:250',
+            'wrong_answer3' => 'required|string|max:250',
         ]);
 
         $quiz = Quiz::find($validated['quiz_id']);
         $question = $quiz->questions()->create($validated);
 
-        return redirect(route('questions.edit', $question));
+        return redirect(route('quizzes.edit', $quiz));
     }
 
     /**
@@ -74,11 +78,10 @@ class QuestionController extends Controller
      */
     public function edit(Question $question): Response
     {
-        $quiz = $question->quiz();
+        $quiz = $question->quiz()->first();
         return Inertia::render('Questions/Form', [
             'quiz' => $quiz,
             'question' => $question,
-            'answers' => [], // TODO
         ]);
     }
 
@@ -93,11 +96,15 @@ class QuestionController extends Controller
     {
         $validated = $request->validate([
             'question' => 'required|string|max:250',
+            'correct_answer' => 'required|string|max:250',
+            'wrong_answer1' => 'required|string|max:250',
+            'wrong_answer2' => 'required|string|max:250',
+            'wrong_answer3' => 'required|string|max:250',
         ]);
 
         $question->update($validated);
         $question->save();
-        return redirect(route('questions.edit', $question));
+        return redirect(route('quizzes.edit', $question->quiz()->first()));
     }
 
     /**

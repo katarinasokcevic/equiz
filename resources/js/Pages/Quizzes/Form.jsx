@@ -45,6 +45,7 @@ export default function Index({ auth, quiz, questions }) {
             <Head title="Quizzes" />
             <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
                 <form onSubmit={submit}>
+                <text>Quiz name:</text>
                     <input
                         type="text"
                         value={data.name}
@@ -52,6 +53,7 @@ export default function Index({ auth, quiz, questions }) {
                         className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                         onChange={e => setData('name', e.target.value)} />
                     <InputError message={errors.name} className="mt-2" />
+                    <text>Number of questions:</text>
                     <input
                         type="text"
                         value={data.number_of_questions}
@@ -59,6 +61,7 @@ export default function Index({ auth, quiz, questions }) {
                         className="block w-full border-gray-300 focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50 rounded-md shadow-sm"
                         onChange={e => setData('number_of_questions', e.target.value)} />
                     <InputError message={errors.number_of_questions} className="mt-2" />
+                    <text>Quiz duration in minutes:</text>
                     <input
                         type="text"
                         value={data.duration_min}
