@@ -1,29 +1,35 @@
-import React from 'react';
-import AuthenticatedLayout from '@/Layouts/AuthenticatedLayout';
-import InputError from '@/Components/InputError';
-import PrimaryButton from '@/Components/PrimaryButton';
-import { Link, Head } from '@inertiajs/react';
- 
+import React from "react";
+import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
+import InputError from "@/Components/InputError";
+import PrimaryButton from "@/Components/PrimaryButton";
+import { Link, Head } from "@inertiajs/react";
+
 export default function Index({ auth, quizzes }) {
     return (
-        <AuthenticatedLayout auth={auth}>
-            <Head title="Quizzes" />
+        <AuthenticatedLayout
+            auth={auth}
+            header={
+                <h2 className="font-semibold text-xl text-gray-800 leading-tight">
+                    Quiz Maker
+                </h2>
+            }
+        >
+            <Head title="Quiz Maker" />
             <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
-            <Link href={route("quizzes.create")}>
-                <PrimaryButton>Create Quiz</PrimaryButton>
-            </Link>
-                    {quizzes.map(quiz => 
+                <Link href={route("quizzes.create")}>
+                    <PrimaryButton>Create Quiz</PrimaryButton>
+                </Link>
+                {quizzes.map((quiz) => (
                     <div className="mt-6 bg-white shadow-sm rounded-lg divide-y">
-                    <div className='flex justify-between'>
-                        <div class="ml-2">{quiz.name}</div>
-                        <Link href={route("quizzes.edit", quiz.id)}>
-                            <PrimaryButton>Edit</PrimaryButton>
-                        </Link>
+                        <div className="flex justify-between">
+                            <div class="ml-2">{quiz.name}</div>
+                            <Link href={route("quizzes.edit", quiz.id)}>
+                                <PrimaryButton>Edit</PrimaryButton>
+                            </Link>
+                        </div>
                     </div>
-                    </div>
-                    )}
+                ))}
             </div>
-
         </AuthenticatedLayout>
     );
 }
