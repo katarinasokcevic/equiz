@@ -7,6 +7,8 @@ use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
+use App\Models\Quiz;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -28,7 +30,8 @@ Route::get('/', function () {
 });
 
 Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    $quizzes = Quiz::all();
+    return Inertia::render('Dashboard', ['quizzes' => $quizzes]);
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::middleware('auth')->group(function () {
