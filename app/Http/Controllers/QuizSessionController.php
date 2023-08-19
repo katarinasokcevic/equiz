@@ -6,7 +6,6 @@ use App\Models\Quiz;
 use App\Models\Question;
 use App\Models\QuizSession;
 use App\Models\QuizSessionAnswer;
-use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
@@ -42,14 +41,7 @@ class QuizSessionController extends Controller
 
         $questionList = [];
         if ($session) {
-            $diff_min = Carbon::now()->diffInMinutes($session->created_at);
-
-            if ($diff_min > $quiz->duration) {
-                $session->is_over = true;
-                $session->save();
-            }
-
-            if ($session->is_over) {
+            if ($session->is_over()) {
                 return redirect(route('quizSessions.show'));
             }
             foreach ($session->quizSessionAnswers()->get() as $sessionQuestionAnswer) {
