@@ -28,12 +28,18 @@ export default function Authenticated({ auth, header, children }) {
                                 >
                                     Quizzes
                                 </NavLink>
-                                <NavLink
-                                    href={route("quizzes.index")}
-                                    active={route().current("quizzes.index")}
-                                >
-                                    Quiz Maker
-                                </NavLink>
+                                {auth.user.is_admin ? (
+                                    <NavLink
+                                        href={route("quizzes.index")}
+                                        active={route().current(
+                                            "quizzes.index"
+                                        )}
+                                    >
+                                        Quiz Maker
+                                    </NavLink>
+                                ) : (
+                                    ""
+                                )}
                             </div>
                         </div>
 

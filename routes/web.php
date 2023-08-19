@@ -3,6 +3,7 @@
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\QuizController;
 use App\Http\Controllers\QuestionController;
+use App\Http\Controllers\QuizSessionController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -47,6 +48,10 @@ Route::resource('quizzes', QuizController::class)
 
 Route::resource('questions', QuestionController::class)
     ->only((['store', 'edit', 'create', 'update']))
+    ->middleware(['auth', 'verified']);
+
+Route::resource('quizSessions', QuizSessionController::class)
+    ->only((['store', 'create']))
     ->middleware(['auth', 'verified']);
 
 

@@ -18,16 +18,34 @@ export default function Dashboard(props) {
                 <div className="max-w-2xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                            List of all quizzes
+                            List of all quizzes:
                         </div>
                     </div>
                     {props.quizzes.map((quiz) => (
                         <div className="mt-6 bg-white shadow-sm rounded-lg divide-y">
                             <div className="flex justify-between">
-                                <div class="ml-2">{quiz.name}</div>
-                                <Link href={route("quizzes.edit", quiz.id)}>
-                                    <PrimaryButton>Start</PrimaryButton>
-                                </Link>
+                                <div class="ml-2">
+                                    <p>{quiz.name}</p>
+                                    <p>
+                                        Number of questions:{" "}
+                                        {quiz.number_of_questions}
+                                    </p>
+                                    <p>Quiz duration: {quiz.duration_min}</p>
+                                </div>
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        alignItems: "center",
+                                    }}
+                                >
+                                    <Link
+                                        href={route("quizSessions.create", {
+                                            quiz_id: quiz.id,
+                                        })}
+                                    >
+                                        <PrimaryButton> Start</PrimaryButton>
+                                    </Link>
+                                </div>
                             </div>
                         </div>
                     ))}
