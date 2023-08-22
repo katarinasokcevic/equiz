@@ -89,6 +89,7 @@ class QuizSessionController extends Controller
         return Inertia::render('QuizSessions/StartQuiz', [
             "quiz" => $quiz,
             "questions" => $questions,
+            "timeLeft" => $session->time_left(),
         ]);
     }
 

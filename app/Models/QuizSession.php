@@ -36,10 +36,26 @@ class QuizSession extends Model
             return true;
         }
         $diffMin = Carbon::now()->diffInMinutes($this->created_at);
-        if ($diffMin > $this->quiz()->first()->duration_min) {
+        if ($diffMin >= $this->quiz()->first()->duration_min) {
             $this->is_over = true;
             $this->save();
         }
         return $this->is_over;
     }
+
+    public function time_left(): string
+    {
+        $finish = $this->created_at->addMinutes($this->quiz()->first()->duration_min);
+        return $finish->diffInSeconds();
+    }
+
+
+    // function time_left(): string
+    // {
+    //     $finish = $this->created_at->addMinutes($this->quiz()->first()->duration_min);
+    //     $remaining = $finish->diff($this->created_at)->format('%I:%S');
+
+    //     return $remaining;
+    // }
+
 }
