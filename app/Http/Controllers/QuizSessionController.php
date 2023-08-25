@@ -22,7 +22,7 @@ class QuizSessionController extends Controller
      * @return \Illuminate\Http\Response
      */
 
-    public function create(Request $request): Response
+    public function create(Request $request)
     {
         $quizId = $request->get('quiz_id');
         /**
@@ -43,22 +43,8 @@ class QuizSessionController extends Controller
         $questionList = [];
         if ($session) {
             if ($session->is_over()) {
-                $results = [];
-                foreach ($session->quizSessionAnswers()->get() as $sessionQuestionAnswer) {
-                    $question = $sessionQuestionAnswer->question()->first();
-                    $results[] = [
-                        "question" => $question->question,
-                        "correctAnswer" => $question->correct_answer,
-                        "userAnswer" => $sessionQuestionAnswer->answer,
-                    ];
-                }
-
-                return Inertia::render('QuizSessions/QuizResults', [
-                    "quiz" => $quiz,
-                    "results" => $results,
-                ]);
+                return redirect(route('quizSessions.show', $session->id));
             }
-
 
             foreach ($session->quizSessionAnswers()->get() as $sessionQuestionAnswer) {
                 $questionList[] = $sessionQuestionAnswer->question()->first();
@@ -139,12 +125,6 @@ class QuizSessionController extends Controller
                 $sessionQuestionAnswer->is_correct = $isCorrect;
                 $sessionQuestionAnswer->save();
             }
-
-            $results[] = [
-                "question" => $question->question,
-                "correctAnswer" => $question->correct_answer,
-                "userAnswer" => $sessionQuestionAnswer->answer,
-            ];
         }
         $quizSession->is_over = true;
         $quizSession->save();
@@ -156,6 +136,8 @@ class QuizSessionController extends Controller
     {
         $quiz = $quizSession->quiz()->first();
         $results = [];
+        $correctAnswers = 0;
+        $totalQuestions = 0;
         foreach ($quizSession->quizSessionAnswers()->get() as $sessionQuestionAnswer) {
             $question = $sessionQuestionAnswer->question()->first();
             $results[] = [
@@ -163,11 +145,17 @@ class QuizSessionController extends Controller
                 "correctAnswer" => $question->correct_answer,
                 "userAnswer" => $sessionQuestionAnswer->answer,
             ];
+            $totalQuestions++;
+            if ($sessionQuestionAnswer->is_correct) {
+                $correctAnswers++;
+            }
         }
 
         return Inertia::render('QuizSessions/QuizResults', [
             "quiz" => $quiz,
             "results" => $results,
+            "correctAnswers" => $correctAnswers,
+            "totalQuestions" => $totalQuestions,
         ]);
     }
 }

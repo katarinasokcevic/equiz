@@ -3,7 +3,13 @@ import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import PrimaryButton from "@/Components/PrimaryButton";
 import { Link, Head } from "@inertiajs/react";
 
-export default function Index({ auth, quiz, results }) {
+export default function Index({
+    auth,
+    quiz,
+    results,
+    correctAnswers,
+    totalQuestions,
+}) {
     return (
         <AuthenticatedLayout
             auth={auth}
@@ -18,6 +24,11 @@ export default function Index({ auth, quiz, results }) {
             <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
                 <div className="flex justify-between mb-6">
                     <h1>{quiz.name}</h1>
+                    <h2>
+                        Correct answer: {correctAnswers} / {totalQuestions}
+                        <br />(
+                        {Math.round((correctAnswers * 100) / totalQuestions)}%)
+                    </h2>
                 </div>
                 {results.map((result) => (
                     <div className="lg:p-6 block rounded-md shadow-sm mb-4">
