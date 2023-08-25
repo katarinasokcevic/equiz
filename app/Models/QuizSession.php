@@ -49,13 +49,4 @@ class QuizSession extends Model
         return $finish->diffInSeconds();
     }
 
-
-    // function time_left(): string
-    // {
-    //     $finish = $this->created_at->addMinutes($this->quiz()->first()->duration_min);
-    //     $remaining = $finish->diff($this->created_at)->format('%I:%S');
-
-    //     return $remaining;
-    // }
-
 }

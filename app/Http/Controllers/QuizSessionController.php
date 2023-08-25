@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Http\RedirectResponse;
 use Inertia\Inertia;
 use Inertia\Response;
+use Inertia\Response as InertiaResponse;
 
 class QuizSessionController extends Controller
 {
@@ -42,8 +43,23 @@ class QuizSessionController extends Controller
         $questionList = [];
         if ($session) {
             if ($session->is_over()) {
-                return redirect(route('quizSessions.show'));
+                $results = [];
+                foreach ($session->quizSessionAnswers()->get() as $sessionQuestionAnswer) {
+                    $question = $sessionQuestionAnswer->question()->first();
+                    $results[] = [
+                        "question" => $question->question,
+                        "correctAnswer" => $question->correct_answer,
+                        "userAnswer" => $sessionQuestionAnswer->answer,
+                    ];
+                }
+
+                return Inertia::render('QuizSessions/QuizResults', [
+                    "quiz" => $quiz,
+                    "results" => $results,
+                ]);
             }
+
+
             foreach ($session->quizSessionAnswers()->get() as $sessionQuestionAnswer) {
                 $questionList[] = $sessionQuestionAnswer->question()->first();
             }
@@ -85,75 +101,73 @@ class QuizSessionController extends Controller
             $questions[] = $questionData;
         }
 
-
         return Inertia::render('QuizSessions/StartQuiz', [
+            "sessionId" => $session->id,
             "quiz" => $quiz,
             "questions" => $questions,
             "timeLeft" => $session->time_left(),
         ]);
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request): RedirectResponse
-    {
-        $validated = $request->validate([
-            'question' => 'required|string|max:250',
-            'quiz_id' => 'required|int',
-            'is_over' => 'required|int',
-        ]);
-
-        $quizSession = new QuizSession($validated);
-        $quizSession->save();
-
-        return redirect(route('quizSessions.index'));
-    }
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\QuizSession  $quizSession
-     * @return \Illuminate\Http\Response
-     */
-    public function show(QuizSession $quizSession)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\QuizSession  $quizSession
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(QuizSession $quizSession)
-    {
-        //
-    }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Models\QuizSession  $quizSession
-     * @return \Illuminate\Http\Response
+     * @return \Illuminate\Http\RedirectResponse
      */
-    public function update(Request $request, QuizSession $quizSession)
+    public function update(Request $request, QuizSession $quizSession): RedirectResponse
     {
-        //
+        $queryParameters = $request->all();
+        if (!$quizSession) {
+            throw new \Exception('Quiz Session ID not specified');
+        }
+        if ($quizSession->is_over()) {
+            return redirect(route('quizSessions.show', $quizSession->id));
+        }
+        foreach ($quizSession->quizSessionAnswers()->get() as $sessionQuestionAnswer) {
+            /** @var Question */
+            $question = $sessionQuestionAnswer->question()->first();
+            $questionId = $question->id;
+
+            $key = 'q_' . $questionId;
+
+            if (isset($queryParameters[$key])) {
+                $sessionQuestionAnswer->answer = $queryParameters[$key];
+                $isCorrect = $question->correct_answer === $sessionQuestionAnswer->answer;
+                $sessionQuestionAnswer->is_correct = $isCorrect;
+                $sessionQuestionAnswer->save();
+            }
+
+            $results[] = [
+                "question" => $question->question,
+                "correctAnswer" => $question->correct_answer,
+                "userAnswer" => $sessionQuestionAnswer->answer,
+            ];
+        }
+        $quizSession->is_over = true;
+        $quizSession->save();
+
+        return redirect(route('quizSessions.show', $quizSession->id));
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\QuizSession  $quizSession
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(QuizSession $quizSession)
+    public function show(QuizSession $quizSession): Response
     {
-        //
+        $quiz = $quizSession->quiz()->first();
+        $results = [];
+        foreach ($quizSession->quizSessionAnswers()->get() as $sessionQuestionAnswer) {
+            $question = $sessionQuestionAnswer->question()->first();
+            $results[] = [
+                "question" => $question->question,
+                "correctAnswer" => $question->correct_answer,
+                "userAnswer" => $sessionQuestionAnswer->answer,
+            ];
+        }
+
+        return Inertia::render('QuizSessions/QuizResults', [
+            "quiz" => $quiz,
+            "results" => $results,
+        ]);
     }
 }

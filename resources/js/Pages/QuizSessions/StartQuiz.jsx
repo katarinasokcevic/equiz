@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import PrimaryButton from "@/Components/PrimaryButton";
-import { Link, Head } from "@inertiajs/react";
+import { Link, Head, useForm } from "@inertiajs/react";
 
 const useCountdown = (targetDate) => {
     const countDownDate = new Date(targetDate).getTime();
@@ -26,18 +26,26 @@ const useCountdown = (targetDate) => {
 
 const CountDownTimer = ({ targetDate }) => {
     const [minutes, seconds] = useCountdown(targetDate);
+    const timeLeftStr = minutes + ":" + seconds;
+    const isUnderOneMinute = minutes === 0 && seconds <= 59;
+    const style = {
+        color: isUnderOneMinute ? "red" : "black",
+    };
     return minutes + seconds > 0 ? (
-        <p>
-            {minutes}:{seconds}
-        </p>
+        <p style={style}>{timeLeftStr}</p>
     ) : (
         <p>Time expired!</p>
     );
 };
 
-export default function Index({ auth, quiz, questions, timeLeft }) {
-    const onOptionChange = (e) => {
-        setAnswer(e.target.value);
+export default function Index({ auth, sessionId, quiz, questions, timeLeft }) {
+    const { data, setData, post, patch, processing, reset, errors } = useForm({
+        _method: "PUT",
+    });
+
+    const submit = (e) => {
+        e.preventDefault();
+        post(route("quizSessions.update", sessionId), {});
     };
 
     var quizEndTime = new Date().getTime() + parseInt(timeLeft) * 1000;
@@ -60,34 +68,41 @@ export default function Index({ auth, quiz, questions, timeLeft }) {
                     </h1>
                     <CountDownTimer targetDate={quizEndTime} />
                 </div>
-
-                {questions.map((question) => (
-                    <div className="lg:p-6 block rounded-md shadow-sm mb-4">
-                        <h1>{question.question}</h1>
-                        {question.answers.map((answer) => (
-                            <div>
-                                <input
-                                    className="shadow p-3 mb-2 bg-white rounded"
-                                    type="radio"
-                                    name={"q_" + question.question_id}
-                                    value={answer}
-                                    onChange={onOptionChange}
-                                />
-                                {" " + answer}
-                            </div>
-                        ))}
-                    </div>
-                ))}
-                <div
-                    style={{
-                        display: "flex",
-                        justifyContent: "flex-end",
-                    }}
-                >
-                    <Link href={route("quizzes.index")}>
+                <form onSubmit={submit}>
+                    {questions.map((question) => (
+                        <div
+                            key={question.question_id}
+                            className="lg:p-6 block rounded-md shadow-sm mb-4"
+                        >
+                            <h1>{question.question}</h1>
+                            {question.answers.map((answer) => (
+                                <div key={question.question_id + answer}>
+                                    <input
+                                        className="shadow p-3 mb-2 bg-white rounded"
+                                        type="radio"
+                                        name={"q_" + question.question_id}
+                                        value={answer}
+                                        onChange={(e) =>
+                                            setData(
+                                                "q_" + question.question_id,
+                                                e.target.value
+                                            )
+                                        }
+                                    />
+                                    {" " + answer}
+                                </div>
+                            ))}
+                        </div>
+                    ))}
+                    <div
+                        style={{
+                            display: "flex",
+                            justifyContent: "flex-end",
+                        }}
+                    >
                         <PrimaryButton>Submit</PrimaryButton>
-                    </Link>
-                </div>
+                    </div>
+                </form>
             </div>
         </AuthenticatedLayout>
     );

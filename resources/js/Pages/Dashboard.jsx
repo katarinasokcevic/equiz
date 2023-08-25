@@ -22,9 +22,12 @@ export default function Dashboard(props) {
                         </div>
                     </div>
                     {props.quizzes.map((quiz) => (
-                        <div className="mt-6 bg-white shadow-sm rounded-lg divide-y">
+                        <div
+                            key={quiz.id}
+                            className="mt-6 bg-white shadow-sm rounded-lg divide-y"
+                        >
                             <div className="flex justify-between">
-                                <div class="ml-2">
+                                <div className="ml-2">
                                     <p>{quiz.name}</p>
                                     <p>
                                         Number of questions:{" "}
@@ -43,7 +46,7 @@ export default function Dashboard(props) {
                                             quiz_id: quiz.id,
                                         })}
                                     >
-                                        <PrimaryButton> Start</PrimaryButton>
+                                        <PrimaryButton>Start</PrimaryButton>
                                     </Link>
                                 </div>
                             </div>
