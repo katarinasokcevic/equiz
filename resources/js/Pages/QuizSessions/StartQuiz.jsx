@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import PrimaryButton from "@/Components/PrimaryButton";
-import { Link, Head, useForm } from "@inertiajs/react";
+import { Head, useForm } from "@inertiajs/react";
 
 const useCountdown = (targetDate) => {
     const countDownDate = new Date(targetDate).getTime();
@@ -64,9 +64,13 @@ export default function Index({ auth, sessionId, quiz, questions, timeLeft }) {
             <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
                 <div className="flex justify-between mb-6">
                     <h1>
-                        {quiz.name} ({quiz.duration_min} min)
+                        <b>
+                            {quiz.name} ({quiz.duration_min} min)
+                        </b>
                     </h1>
-                    <CountDownTimer targetDate={quizEndTime} />
+                    <b>
+                        <CountDownTimer targetDate={quizEndTime} />
+                    </b>
                 </div>
                 <form onSubmit={submit}>
                     {questions.map((question) => (
@@ -74,11 +78,13 @@ export default function Index({ auth, sessionId, quiz, questions, timeLeft }) {
                             key={question.question_id}
                             className="lg:p-6 block rounded-md shadow-sm mb-4"
                         >
-                            <h1>{question.question}</h1>
+                            <h1>
+                                <b>{question.question}</b>
+                            </h1>
                             {question.answers.map((answer) => (
                                 <div key={question.question_id + answer}>
                                     <input
-                                        className="shadow p-3 mb-2 bg-white rounded"
+                                        className="shadow p-3 mb-2 mt-2 bg-white rounded"
                                         type="radio"
                                         name={"q_" + question.question_id}
                                         value={answer}

@@ -59,10 +59,6 @@ class QuizController extends Controller
      * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function show(Quiz $quiz)
-    {
-        //
-    }
 
     /**
      * Show the form for editing the specified resource.
@@ -104,8 +100,5 @@ class QuizController extends Controller
      * @param  \App\Models\Quiz  $quiz
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Quiz $quiz)
-    {
-        //
-    }
+
 }

@@ -18,7 +18,7 @@ export default function Dashboard(props) {
                 <div className="max-w-2xl mx-auto sm:px-6 lg:px-8">
                     <div className="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                         <div className="p-6 text-gray-900">
-                            List of all quizzes:
+                            <b>List of all quizzes:</b>
                         </div>
                     </div>
                     {props.quizzes.map((quiz) => (
@@ -28,12 +28,14 @@ export default function Dashboard(props) {
                         >
                             <div className="flex justify-between">
                                 <div className="ml-2">
-                                    <p>{quiz.name}</p>
+                                    <b>{quiz.name}</b>
                                     <p>
                                         Number of questions:{" "}
                                         {quiz.number_of_questions}
                                     </p>
-                                    <p>Quiz duration: {quiz.duration_min}</p>
+                                    <p>
+                                        Quiz duration: {quiz.duration_min} min
+                                    </p>
                                 </div>
                                 <div
                                     style={{

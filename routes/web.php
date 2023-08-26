@@ -54,6 +54,4 @@ Route::resource('quizSessions', QuizSessionController::class)
     ->only((['create', 'show', 'update']))
     ->middleware(['auth', 'verified']);
 
-//Route::get('/quizSessions', [QuizSessionController::class, 'update'])->name('quizSessions.update');
-
 require __DIR__ . '/auth.php';

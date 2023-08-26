@@ -22,9 +22,12 @@ export default function Index({ auth, quiz, questions }) {
     if (quiz && quiz.id) {
         buttonText = "Edit Quiz";
         let questionList = questions.map((question) => (
-            <div className="mt-6 bg-white shadow-sm rounded-lg divide-y">
+            <div
+                key={question.question}
+                className="mt-6 bg-white shadow-sm rounded-lg divide-y"
+            >
                 <div className="flex justify-between">
-                    <div class="ml-2">{question.question}</div>
+                    <div className="ml-2">{question.question}</div>
                     <Link href={route("questions.edit", question.id)}>
                         <PrimaryButton>Edit</PrimaryButton>
                     </Link>
@@ -46,7 +49,7 @@ export default function Index({ auth, quiz, questions }) {
             <Head title="Quizzes" />
             <div className="max-w-2xl mx-auto p-4 sm:p-6 lg:p-8">
                 <form onSubmit={submit}>
-                    <text>Quiz name:</text>
+                    <p>Quiz name:</p>
                     <input
                         type="text"
                         value={data.name}
@@ -55,7 +58,7 @@ export default function Index({ auth, quiz, questions }) {
                         onChange={(e) => setData("name", e.target.value)}
                     />
                     <InputError message={errors.name} className="mt-2" />
-                    <text>Number of questions:</text>
+                    <p>Number of questions:</p>
                     <input
                         type="text"
                         value={data.number_of_questions}
@@ -69,7 +72,7 @@ export default function Index({ auth, quiz, questions }) {
                         message={errors.number_of_questions}
                         className="mt-2"
                     />
-                    <text>Quiz duration in minutes:</text>
+                    <p>Quiz duration in minutes:</p>
                     <input
                         type="text"
                         value={data.duration_min}

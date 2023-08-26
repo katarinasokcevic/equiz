@@ -1,6 +1,5 @@
 import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
-import InputError from "@/Components/InputError";
 import PrimaryButton from "@/Components/PrimaryButton";
 import { Link, Head } from "@inertiajs/react";
 
@@ -20,9 +19,15 @@ export default function Index({ auth, quizzes }) {
                     <PrimaryButton>Create Quiz</PrimaryButton>
                 </Link>
                 {quizzes.map((quiz) => (
-                    <div className="mt-6 bg-white shadow-sm rounded-lg divide-y">
+                    <div
+                        key={quiz.id}
+                        className="mt-6 bg-white shadow-sm rounded-lg divide-y"
+                    >
                         <div className="flex justify-between">
-                            <div class="ml-2">{quiz.name}</div>
+                            <div className="ml-2">
+                                {" "}
+                                <b>{quiz.name}</b>
+                            </div>
                             <Link href={route("quizzes.edit", quiz.id)}>
                                 <PrimaryButton>Edit</PrimaryButton>
                             </Link>

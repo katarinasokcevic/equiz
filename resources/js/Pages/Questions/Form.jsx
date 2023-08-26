@@ -2,7 +2,7 @@ import React from "react";
 import AuthenticatedLayout from "@/Layouts/AuthenticatedLayout";
 import InputError from "@/Components/InputError";
 import PrimaryButton from "@/Components/PrimaryButton";
-import { Link, useForm, Head } from "@inertiajs/react";
+import { useForm, Head } from "@inertiajs/react";
 
 export default function Index({ auth, quiz, question, answers }) {
     const { data, setData, post, patch, processing, reset, errors } =
@@ -32,7 +32,7 @@ export default function Index({ auth, quiz, question, answers }) {
                 </h1>
                 <p>&nbsp;</p>
                 <form onSubmit={submit}>
-                    <text>Question:</text>
+                    <p>Question:</p>
                     <input
                         type="text"
                         value={data.question}
@@ -44,7 +44,7 @@ export default function Index({ auth, quiz, question, answers }) {
 
                     <p>&nbsp;</p>
 
-                    <text>Correct Answer:</text>
+                    <p>Correct Answer:</p>
                     <input
                         type="text"
                         value={data.correct_answer}
@@ -59,7 +59,7 @@ export default function Index({ auth, quiz, question, answers }) {
                         className="mt-2"
                     />
 
-                    <text>Wrong answer 1:</text>
+                    <p>Wrong answer 1:</p>
                     <input
                         type="text"
                         value={data.wrong_answer1}
@@ -74,7 +74,7 @@ export default function Index({ auth, quiz, question, answers }) {
                         className="mt-2"
                     />
 
-                    <text>Wrong answer 2:</text>
+                    <p>Wrong answer 2:</p>
                     <input
                         type="text"
                         value={data.wrong_answer2}
@@ -89,7 +89,7 @@ export default function Index({ auth, quiz, question, answers }) {
                         className="mt-2"
                     />
 
-                    <text>Wrong answer 3:</text>
+                    <p>Wrong answer 3:</p>
                     <input
                         type="text"
                         value={data.wrong_answer3}

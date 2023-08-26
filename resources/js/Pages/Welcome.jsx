@@ -60,10 +60,10 @@ export default function Welcome(props) {
                                         style={{ fontSize: 25 }}
                                     >
                                         eQuiz is a web application that allows
-                                        users to create and take quizzes. It is
-                                        a powerful tool for learning and
-                                        assessment, and can be used by
-                                        individuals, schools, and businesses.
+                                        users take quizzes. It is a powerful
+                                        tool for learning and assessment, and
+                                        can be used by individuals, schools, and
+                                        businesses.
                                     </p>
                                 </div>
                             </a>
